@@ -11,6 +11,10 @@ The app currently runs on **generated sample data**. The data layer is designed 
 
 Requires [Node.js](https://nodejs.org) 20 or newer.
 
+**On Windows, the easiest way:** double-click `start.bat`. It installs what is needed the first time and opens the dashboard in your browser. Keep its window open while you use the dashboard.
+
+> Opening `index.html` directly (double-click) shows a blank page. This is a web app that needs a small local server, so always start it with `start.bat` or `npm run dev`.
+
 ```bash
 npm install
 npm run dev
