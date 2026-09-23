@@ -51,16 +51,21 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 describe('airtableConfigFromEnv', () => {
-  it('needs a token and a base id', () => {
+  it('needs a token, and defaults to the Onboarding Employees table', () => {
     expect(airtableConfigFromEnv({})).toBeNull();
-    expect(airtableConfigFromEnv({ VITE_AIRTABLE_TOKEN: 'x' })).toBeNull();
-    expect(
-      airtableConfigFromEnv({ VITE_AIRTABLE_TOKEN: 'x', VITE_AIRTABLE_BASE_ID: 'app1' }),
-    ).toEqual({
+    expect(airtableConfigFromEnv({ VITE_AIRTABLE_TOKEN: 'x' })).toEqual({
       token: 'x',
-      baseId: 'app1',
+      baseId: 'appmsE2WLIFOSvh82',
       table: 'Onboarding Employees',
     });
+    expect(
+      airtableConfigFromEnv({ VITE_AIRTABLE_TOKEN: 'x', VITE_AIRTABLE_BASE_ID: 'app1' })?.baseId,
+    ).toBe('app1');
+  });
+
+  it('prefers the token pasted in the browser', () => {
+    expect(airtableConfigFromEnv({ VITE_AIRTABLE_TOKEN: 'env' }, 'browser')?.token).toBe('browser');
+    expect(airtableConfigFromEnv({}, 'browser')?.token).toBe('browser');
   });
 });
 

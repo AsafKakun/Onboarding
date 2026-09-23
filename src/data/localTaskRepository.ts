@@ -1,6 +1,6 @@
 import type { Employee, Manager, OnboardingTask } from '../domain/types';
 import { getToday } from '../utils/date';
-import type { OnboardingRepository } from './repository';
+import type { DataSource, OnboardingRepository } from './repository';
 import type { SampleData } from './sampleData';
 
 export type KeyValueStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
@@ -28,6 +28,7 @@ export class LocalTaskRepository implements OnboardingRepository {
     private readonly storageKey: string,
     protected readonly today: () => string = getToday,
     protected readonly storage: KeyValueStorage | null = browserStorage(),
+    readonly source: DataSource = { kind: 'sample' },
   ) {}
 
   async getEmployees(): Promise<Employee[]> {

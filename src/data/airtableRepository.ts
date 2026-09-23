@@ -20,14 +20,25 @@ export interface AirtableRecord {
 
 type FetchLike = (url: string, init: { headers: Record<string, string> }) => Promise<Response>;
 
-/** Reads the Airtable settings from Vite env vars; null when no token/base is configured. */
+/** The Airtable table the dashboard reads when nothing else is configured. */
+export const DEFAULT_AIRTABLE_BASE_ID = 'appmsE2WLIFOSvh82';
+export const DEFAULT_AIRTABLE_TABLE = 'Onboarding Employees';
+
+/**
+ * Builds the Airtable settings. The token pasted in the dashboard (`browserToken`) wins over
+ * `VITE_AIRTABLE_TOKEN` from `.env.local`; null when there is no token at all.
+ */
 export function airtableConfigFromEnv(
   env: Record<string, string | undefined>,
+  browserToken: string | null = null,
 ): AirtableConfig | null {
-  const token = env.VITE_AIRTABLE_TOKEN?.trim();
-  const baseId = env.VITE_AIRTABLE_BASE_ID?.trim();
-  if (!token || !baseId) return null;
-  return { token, baseId, table: env.VITE_AIRTABLE_TABLE?.trim() || 'Onboarding Employees' };
+  const token = browserToken?.trim() || env.VITE_AIRTABLE_TOKEN?.trim();
+  if (!token) return null;
+  return {
+    token,
+    baseId: env.VITE_AIRTABLE_BASE_ID?.trim() || DEFAULT_AIRTABLE_BASE_ID,
+    table: env.VITE_AIRTABLE_TABLE?.trim() || DEFAULT_AIRTABLE_TABLE,
+  };
 }
 
 /** Fetches every record of the table, following Airtable's pagination. */
@@ -120,6 +131,7 @@ export function createAirtableRepository(
     AIRTABLE_STORAGE_KEY,
     options.today,
     options.storage,
+    { kind: 'airtable-live' },
   );
 }
 
@@ -139,5 +151,6 @@ export function createAirtableSnapshotRepository(
     AIRTABLE_STORAGE_KEY,
     options.today,
     options.storage,
+    { kind: 'airtable-snapshot', syncedAt: snapshot.syncedAt },
   );
 }

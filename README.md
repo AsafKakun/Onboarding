@@ -35,35 +35,35 @@ Then open the URL that Vite prints (usually http://localhost:5173).
 The dashboard shows employees from the Airtable table **Onboarding Employees**
 (fields: Employee ID, Full Name, Position, Department, Manager, Start Date, Overdue Tasks, Status).
 
-The Airtable token stays on your computer. The published site never contains it: it reads a copy
-of the table saved in `src/data/airtableSnapshot.json`.
-
-**One-time setup**
+**Live data (every page load)**
 
 1. Create a personal access token at https://airtable.com/create/tokens with the
    `data.records:read` scope and access to the base. Copy the **whole** token
    (`pat…` + `.` + 64 characters): Airtable shows it only once.
-2. Copy `.env.example` to `.env.local` and paste the token into `VITE_AIRTABLE_TOKEN`.
-   `.env.local` is ignored by git. Never commit the token.
+2. Open the dashboard, click **Connect Airtable** at the bottom of the page, paste the token and
+   click **Save and load**.
 
-**Updating the published site after changing Airtable**
+The token is saved only in that browser (never on the site or in the code) and is sent only to
+`api.airtable.com`. From then on, every time the page opens or is refreshed it reads Airtable.
+**Disconnect** removes the token from the browser.
+
+**Visitors without a token** see a saved copy of the table, `src/data/airtableSnapshot.json`.
+To refresh that copy, put the token in `.env.local` (see `.env.example`), then:
 
 ```bash
-npm run sync:airtable   # saves the table to src/data/airtableSnapshot.json
+npm run sync:airtable
 git add src/data/airtableSnapshot.json
 git commit -m "Update Airtable data"
 git push
 ```
 
-When the change reaches `main`, GitHub Pages is rebuilt with the new data.
-
 **Where the data comes from**
 
-| Situation                                  | Data                  |
-| ------------------------------------------ | --------------------- |
-| `npm run dev` with a token in `.env.local` | Live from Airtable    |
-| Published site (no token)                  | The saved snapshot    |
-| Snapshot file deleted                      | Generated sample data |
+| Situation                                         | Data                  |
+| ------------------------------------------------- | --------------------- |
+| Token pasted in the dashboard, or in `.env.local` | Live from Airtable    |
+| No token                                          | The saved copy        |
+| Saved copy deleted                                | Generated sample data |
 
 Onboarding tasks are generated from the standard templates so that each employee has the number
 of overdue tasks set in Airtable; ticking a task is saved in your browser only.
