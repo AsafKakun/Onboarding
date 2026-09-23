@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-09-23T17:40:00.000Z",
+  "syncedAt": "2026-09-23T18:45:00.000Z",
   "records": [
     {
       "id": "rechbeXfzkGQQ1U4q",
@@ -81,7 +81,7 @@
         "Manager": "Maya Cohen",
         "Start Date": "2026-09-18",
         "Stage": "First Week",
-        "Overdue Tasks": 2,
+        "Overdue Tasks": 1,
         "Status": "Needs Attention"
       }
     },
