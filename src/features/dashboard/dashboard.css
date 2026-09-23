@@ -393,3 +393,69 @@
   white-space: normal;
   line-height: 1.3;
 }
+
+/* CSV import / export */
+.employees-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.csv-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: 560px;
+}
+
+.csv-actions__buttons {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.csv-actions .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.csv-actions__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.csv-panel {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-caption);
+  text-align: left;
+}
+
+.csv-panel p {
+  margin: 0 0 var(--space-2);
+}
+
+.csv-panel ul {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-4);
+}
+
+.csv-panel__title {
+  font-weight: 600;
+}
+
+.csv-panel__buttons {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.csv-panel--error {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}

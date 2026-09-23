@@ -57,6 +57,18 @@ fails, the committed copy is used.
 To update the committed copy by hand, put the token in `.env.local` (see `.env.example`), then run
 `npm run sync:airtable`, commit `src/data/airtableSnapshot.json` and push.
 
+**Import and export CSV**
+
+Above the employee table:
+
+- **Export CSV** downloads every employee in the table's format (Stage and Status as the dashboard
+  computes them).
+- **Import CSV** saves a CSV file to Airtable. Each row is matched on **Employee ID**: an existing
+  ID is updated, a new one is added. The file is checked first (column names, dates as
+  `2026-09-23`, whole numbers for Overdue Tasks) and nothing is written until you confirm.
+  Import needs a live Airtable connection with a token that has the `data.records:write` scope.
+  Sample files are in `samples/`.
+
 **Where the data comes from**
 
 | Situation                                         | Data                    |

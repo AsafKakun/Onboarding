@@ -17,7 +17,9 @@ import {
   topOverdue,
 } from '../../domain/summarize';
 import { useOnboardingData } from '../../hooks/useOnboardingData';
+import { useRepository } from '../../hooks/useRepository';
 import { useUrlFilters } from '../../hooks/useUrlFilters';
+import { CsvActions } from './CsvActions';
 import { EmployeeTable } from './EmployeeTable';
 import { FilterBar } from './FilterBar';
 import { KpiCards } from './KpiCards';
@@ -30,6 +32,7 @@ const EMPTY_KPIS = computeKpis([]);
 
 export function DashboardPage() {
   const { state, today, reload } = useOnboardingData();
+  const repository = useRepository();
   const { filters, sort, setFilter, clearFilters, toggleSort } = useUrlFilters();
 
   const summaries = useMemo(
@@ -74,9 +77,12 @@ export function DashboardPage() {
       </div>
 
       <section className="card employees-card" aria-labelledby="employees-title">
-        <h2 className="section-title" id="employees-title">
-          Employees
-        </h2>
+        <div className="employees-card__header">
+          <h2 className="section-title" id="employees-title">
+            Employees
+          </h2>
+          <CsvActions summaries={summaries} repository={repository} today={today} />
+        </div>
         <FilterBar
           filters={filters}
           departments={uniqueDepartments(summaries)}
