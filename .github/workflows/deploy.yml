@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Rebuild every hour so the saved Airtable copy stays current.
+  schedule:
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -26,6 +29,19 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      # Refreshes the saved Airtable copy shown to visitors without a token. The token comes
+      # from the AIRTABLE_TOKEN repository secret and is never written to the site. If the
+      # secret is missing or Airtable fails, the committed copy is used.
+      - name: Refresh Airtable data
+        continue-on-error: true
+        env:
+          VITE_AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+        run: |
+          if [ -z "$VITE_AIRTABLE_TOKEN" ]; then
+            echo "No AIRTABLE_TOKEN secret: using the committed Airtable copy."
+          else
+            node scripts/sync-airtable.mjs
+          fi
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

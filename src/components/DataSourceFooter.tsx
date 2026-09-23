@@ -9,6 +9,17 @@ import { formatDate } from '../utils/date';
 
 const reloadPage = () => window.location.reload();
 
+/** "DD/MM/YYYY HH:MM" in the viewer's time zone; the copy is refreshed every hour. */
+function formatSyncTime(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = (value: number) => String(value).padStart(2, '0');
+  const day = formatDate(
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+  );
+  return `${day} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 /**
  * Says where the data comes from and lets the viewer paste an Airtable token.
  * The token is kept in this browser only; with it, every page load reads Airtable live.
@@ -56,7 +67,7 @@ export function DataSourceFooter({
   if (source.kind === 'airtable-snapshot') {
     return (
       <p className="data-source">
-        Showing a saved copy of Airtable from {formatDate(source.syncedAt.slice(0, 10))}.{' '}
+        Showing a saved copy of Airtable from {formatSyncTime(source.syncedAt)}.{' '}
         {connectButton('Connect Airtable for live data')}
       </p>
     );

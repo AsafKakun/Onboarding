@@ -1,16 +1,17 @@
 // Copies the Airtable employees table into src/data/airtableSnapshot.json, which the
-// published dashboard reads. The token stays on this computer (.env.local) and is never
-// written to the snapshot.
+// published dashboard shows to visitors without a token. The token is never written to
+// the snapshot.
 //
-// Usage: npm run sync:airtable
+// Usage: npm run sync:airtable (token from .env.local), or with VITE_AIRTABLE_TOKEN set
+// in the environment (the hourly GitHub Pages build).
 import { writeFile } from 'node:fs/promises';
 
 const token = process.env.VITE_AIRTABLE_TOKEN?.trim();
-const baseId = process.env.VITE_AIRTABLE_BASE_ID?.trim();
+const baseId = process.env.VITE_AIRTABLE_BASE_ID?.trim() || 'appmsE2WLIFOSvh82';
 const table = process.env.VITE_AIRTABLE_TABLE?.trim() || 'Onboarding Employees';
 
-if (!token || !baseId) {
-  console.error('Missing VITE_AIRTABLE_TOKEN or VITE_AIRTABLE_BASE_ID in .env.local');
+if (!token) {
+  console.error('Missing VITE_AIRTABLE_TOKEN (in .env.local or the environment)');
   process.exit(1);
 }
 
