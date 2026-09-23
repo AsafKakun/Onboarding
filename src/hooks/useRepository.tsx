@@ -1,13 +1,16 @@
 import { createContext, useContext, type ReactNode } from 'react';
+import { airtableConfigFromEnv, createAirtableRepository } from '../data/airtableRepository';
 import { MockRepository } from '../data/mockRepository';
 import type { OnboardingRepository } from '../data/repository';
 
 /**
- * The one place that decides where data comes from.
- * To use a real data source, replace `new MockRepository()` with your own implementation
- * of `OnboardingRepository`.
+ * The one place that decides where data comes from: Airtable when it is configured
+ * in `.env.local` (see README), otherwise the generated sample data.
  */
-const defaultRepository: OnboardingRepository = new MockRepository();
+const airtableConfig = airtableConfigFromEnv(import.meta.env);
+const defaultRepository: OnboardingRepository = airtableConfig
+  ? createAirtableRepository(airtableConfig)
+  : new MockRepository();
 
 const RepositoryContext = createContext<OnboardingRepository>(defaultRepository);
 

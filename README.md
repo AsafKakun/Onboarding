@@ -30,6 +30,24 @@ Then open the URL that Vite prints (usually http://localhost:5173).
 | `npm run lint`   | Lint the code (no warnings allowed)                 |
 | `npm run format` | Format the code with Prettier                       |
 
+## Connecting Airtable
+
+The dashboard can load employees from the Airtable table **Onboarding Employees**
+(fields: Employee ID, Full Name, Position, Department, Manager, Start Date, Overdue Tasks, Status).
+
+1. Create a personal access token at https://airtable.com/create/tokens with the
+   `data.records:read` scope and access to the base. Copy the **whole** token
+   (`pat…` + `.` + 64 characters) — it is shown only once.
+2. Copy `.env.example` to `.env.local` and paste the token into `VITE_AIRTABLE_TOKEN`.
+3. Restart `npm run dev`.
+
+`.env.local` is ignored by git. Never commit the token, and do not add it to the GitHub Pages
+build: anything bundled into this static site is readable by every visitor. Without a token the
+dashboard falls back to the generated sample data.
+
+Onboarding tasks are generated from the standard templates so that each employee has the number
+of overdue tasks set in Airtable; ticking a task is saved in your browser only.
+
 ## What you can do
 
 - **Dashboard (`/`)**: KPI cards, employees by stage and by status, a "Needs attention" list, and a searchable, filterable, sortable employee table. Filters and sorting are kept in the URL, so a view can be bookmarked or shared.

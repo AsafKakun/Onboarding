@@ -197,59 +197,74 @@ function shuffle<T>(items: readonly T[], random: () => number): T[] {
  */
 export function generateSampleData(today: string, seed: number = DEFAULT_SEED): SampleData {
   const random = createRandom(seed);
-  const todayNumber = toDayNumber(today) as number;
   const departmentByManager = new Map(MANAGERS.map((m) => [m.id, m.department]));
 
   const employees: Employee[] = [];
   const tasks: OnboardingTask[] = [];
 
   EMPLOYEE_SPECS.forEach((spec, index) => {
-    const id = `e-${String(index + 1).padStart(2, '0')}`;
-    const startDate = addDays(today, spec.startOffsetDays);
-    // Nobody completes something more than two weeks before they start.
-    const earliestCompletion = (toDayNumber(startDate) as number) - 14;
-
-    employees.push({
-      id,
+    const employee: Employee = {
+      id: `e-${String(index + 1).padStart(2, '0')}`,
       fullName: spec.fullName,
       position: spec.position,
       department: departmentByManager.get(spec.managerId) ?? '',
       managerId: spec.managerId,
-      startDate,
-    });
-
-    const employeeTasks: OnboardingTask[] = TASK_TEMPLATES.map((template, taskIndex) => ({
-      id: `${id}-t${String(taskIndex + 1).padStart(2, '0')}`,
-      employeeId: id,
-      stage: template.stage,
-      title: template.title,
-      owner: template.owner,
-      dueDate: addDays(startDate, template.dueOffsetDays),
-      completedAt: null,
-    }));
-
-    const completeOn = (task: OnboardingTask, completedNumber: number) => {
-      const day = Math.min(todayNumber, Math.max(earliestCompletion, completedNumber));
-      task.completedAt = addDays(today, day - todayNumber);
+      startDate: addDays(today, spec.startOffsetDays),
     };
-
-    const pastDue = employeeTasks.filter(
-      (task) => (toDayNumber(task.dueDate) as number) < todayNumber,
+    employees.push(employee);
+    tasks.push(
+      ...buildEmployeeTasks(employee, today, random, {
+        overdueTasks: spec.overdueTasks,
+        fullyCompleted: spec.fullyCompleted ?? false,
+      }),
     );
-    const leftOverdue = new Set(
-      spec.fullyCompleted ? [] : shuffle(pastDue, random).slice(0, spec.overdueTasks),
-    );
-
-    for (const task of employeeTasks) {
-      const due = toDayNumber(task.dueDate) as number;
-      if (due < todayNumber) {
-        if (!leftOverdue.has(task)) completeOn(task, due - Math.floor(random() * 3));
-      } else if (due <= todayNumber + 3 && random() < 0.2) {
-        completeOn(task, todayNumber); // finished a little early
-      }
-    }
-    tasks.push(...employeeTasks);
   });
 
   return { managers: MANAGERS.map((m) => ({ ...m })), employees, tasks };
+}
+
+/**
+ * Creates the standard onboarding tasks for one employee, completed realistically up to `today`:
+ * every past-due task is done except `overdueTasks` of them; with `fullyCompleted` every task is done.
+ */
+export function buildEmployeeTasks(
+  employee: Employee,
+  today: string,
+  random: () => number,
+  { overdueTasks, fullyCompleted }: { overdueTasks: number; fullyCompleted: boolean },
+): OnboardingTask[] {
+  const todayNumber = toDayNumber(today) as number;
+  // Nobody completes something more than two weeks before they start.
+  const earliestCompletion = (toDayNumber(employee.startDate) ?? todayNumber) - 14;
+
+  const tasks: OnboardingTask[] = TASK_TEMPLATES.map((template, taskIndex) => ({
+    id: `${employee.id}-t${String(taskIndex + 1).padStart(2, '0')}`,
+    employeeId: employee.id,
+    stage: template.stage,
+    title: template.title,
+    owner: template.owner,
+    dueDate: addDays(employee.startDate, template.dueOffsetDays),
+    completedAt: null,
+  }));
+
+  const completeOn = (task: OnboardingTask, completedNumber: number) => {
+    const day = Math.min(todayNumber, Math.max(earliestCompletion, completedNumber));
+    task.completedAt = addDays(today, day - todayNumber);
+  };
+
+  const pastDue = tasks.filter((task) => (toDayNumber(task.dueDate) ?? todayNumber) < todayNumber);
+  const leftOverdue = new Set(
+    fullyCompleted ? [] : shuffle(pastDue, random).slice(0, overdueTasks),
+  );
+
+  for (const task of tasks) {
+    const due = toDayNumber(task.dueDate);
+    if (due === null) continue;
+    if (due < todayNumber || fullyCompleted) {
+      if (!leftOverdue.has(task)) completeOn(task, due - Math.floor(random() * 3));
+    } else if (due <= todayNumber + 3 && random() < 0.2) {
+      completeOn(task, todayNumber); // finished a little early
+    }
+  }
+  return tasks;
 }
