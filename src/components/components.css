@@ -237,3 +237,51 @@
     transition: none;
   }
 }
+
+/* Data source footer and Airtable token form */
+.data-source {
+  margin: 0;
+}
+
+.token-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 720px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-body);
+}
+
+.token-form__label {
+  font-weight: 600;
+}
+
+.token-form__help {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.token-form__row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.token-form__input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+}
+
+.token-form__error {
+  margin: 0;
+  color: var(--color-danger-text);
+  font-size: var(--text-caption);
+}

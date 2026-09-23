@@ -1,4 +1,5 @@
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
+import { DataSourceFooter } from './components/DataSourceFooter';
 import { EmptyState } from './components/EmptyState';
 import { useRepository } from './hooks/useRepository';
 import { DashboardPage } from './features/dashboard/DashboardPage';
@@ -23,18 +24,12 @@ function Layout() {
       <main className="container app-main">
         <Outlet />
       </main>
-      {resetDemoData && (
-        <footer className="container app-footer">
-          Showing sample data.{' '}
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => void resetDemoData().then(() => window.location.reload())}
-          >
-            Reset demo data
-          </button>
-        </footer>
-      )}
+      <footer className="container app-footer">
+        <DataSourceFooter
+          source={repository.source ?? { kind: 'sample' }}
+          onResetDemo={resetDemoData}
+        />
+      </footer>
     </div>
   );
 }
