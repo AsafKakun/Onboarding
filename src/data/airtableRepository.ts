@@ -1,6 +1,8 @@
 import type { Employee, Manager } from '../domain/types';
 import { toDayNumber } from '../utils/date';
+import type { EmployeeImportRow } from './employeeCsv';
 import { LocalTaskRepository, type KeyValueStorage } from './localTaskRepository';
+import type { ImportResult } from './repository';
 import { buildEmployeeTasks, createRandom, DEFAULT_SEED, type SampleData } from './sampleData';
 
 export const AIRTABLE_STORAGE_KEY = 'onboarding-airtable.task-completions.v1';
@@ -18,7 +20,10 @@ export interface AirtableRecord {
   fields: Record<string, unknown>;
 }
 
-type FetchLike = (url: string, init: { headers: Record<string, string> }) => Promise<Response>;
+type FetchLike = (
+  url: string,
+  init: { method?: string; headers: Record<string, string>; body?: string },
+) => Promise<Response>;
 
 /** The Airtable table the dashboard reads when nothing else is configured. */
 export const DEFAULT_AIRTABLE_BASE_ID = 'appmsE2WLIFOSvh82';
@@ -120,19 +125,80 @@ export function sampleDataFromAirtable(records: AirtableRecord[], today: string)
   return { managers: [...managers.values()], employees, tasks };
 }
 
+/** Airtable accepts at most 10 records per write request. */
+const WRITE_BATCH_SIZE = 10;
+
+/**
+ * Adds or updates employees in Airtable, matching on "Employee ID": an existing ID is updated,
+ * a new one is added. Select options that do not exist yet are created (typecast).
+ */
+export async function upsertAirtableEmployees(
+  config: AirtableConfig,
+  rows: readonly EmployeeImportRow[],
+  fetchFn: FetchLike = fetch,
+): Promise<ImportResult> {
+  const url = `https://api.airtable.com/v0/${encodeURIComponent(config.baseId)}/${encodeURIComponent(config.table)}`;
+  const result: ImportResult = { created: 0, updated: 0 };
+  for (let start = 0; start < rows.length; start += WRITE_BATCH_SIZE) {
+    const batch = rows.slice(start, start + WRITE_BATCH_SIZE);
+    const response = await fetchFn(url, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${config.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        performUpsert: { fieldsToMergeOn: ['Employee ID'] },
+        typecast: true,
+        records: batch.map((fields) => ({ fields })),
+      }),
+    });
+    if (!response.ok) throw new AirtableWriteError(response.status, start);
+    const body = (await response.json()) as {
+      createdRecords?: string[];
+      updatedRecords?: string[];
+    };
+    result.created += body.createdRecords?.length ?? 0;
+    result.updated += body.updatedRecords?.length ?? 0;
+  }
+  return result;
+}
+
+/** A failed write; `saved` rows (earlier batches) were already written. */
+export class AirtableWriteError extends Error {
+  constructor(
+    readonly status: number,
+    readonly saved: number,
+  ) {
+    super(`Airtable write failed: ${status}`);
+  }
+}
+
+/** Live Airtable data that can also import employees back into the table. */
+export class AirtableLiveRepository extends LocalTaskRepository {
+  constructor(
+    private readonly config: AirtableConfig,
+    private readonly fetchFn: FetchLike = fetch,
+    today?: () => string,
+    storage?: KeyValueStorage | null,
+  ) {
+    super(
+      async (date) => sampleDataFromAirtable(await fetchAirtableRecords(config, fetchFn), date),
+      AIRTABLE_STORAGE_KEY,
+      today,
+      storage,
+      { kind: 'airtable-live' },
+    );
+  }
+
+  importEmployees(rows: readonly EmployeeImportRow[]): Promise<ImportResult> {
+    return upsertAirtableEmployees(this.config, rows, this.fetchFn);
+  }
+}
+
 /** Employees and managers from Airtable; task changes are kept in this browser only. */
 export function createAirtableRepository(
   config: AirtableConfig,
   options: { fetchFn?: FetchLike; today?: () => string; storage?: KeyValueStorage | null } = {},
-): LocalTaskRepository {
-  return new LocalTaskRepository(
-    async (today) =>
-      sampleDataFromAirtable(await fetchAirtableRecords(config, options.fetchFn), today),
-    AIRTABLE_STORAGE_KEY,
-    options.today,
-    options.storage,
-    { kind: 'airtable-live' },
-  );
+): AirtableLiveRepository {
+  return new AirtableLiveRepository(config, options.fetchFn, options.today, options.storage);
 }
 
 /** A copy of the Airtable table saved by `npm run sync:airtable` (contains no token). */

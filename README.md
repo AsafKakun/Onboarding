@@ -48,22 +48,34 @@ The token is saved only in that browser (never on the site or in the code) and i
 **Disconnect** removes the token from the browser.
 
 **Visitors without a token** see a saved copy of the table, `src/data/airtableSnapshot.json`.
-To refresh that copy, put the token in `.env.local` (see `.env.example`), then:
+The GitHub Pages build refreshes that copy **every hour** (and on every push to `main`) when the
+repository has an `AIRTABLE_TOKEN` secret: GitHub → Settings → Secrets and variables → Actions →
+New repository secret, name `AIRTABLE_TOKEN`, value the token (read-only is enough). The secret is
+used only while building and is never written to the site. Without the secret, or if Airtable
+fails, the committed copy is used.
 
-```bash
-npm run sync:airtable
-git add src/data/airtableSnapshot.json
-git commit -m "Update Airtable data"
-git push
-```
+To update the committed copy by hand, put the token in `.env.local` (see `.env.example`), then run
+`npm run sync:airtable`, commit `src/data/airtableSnapshot.json` and push.
+
+**Import and export CSV**
+
+Above the employee table:
+
+- **Export CSV** downloads every employee in the table's format (Stage and Status as the dashboard
+  computes them).
+- **Import CSV** saves a CSV file to Airtable. Each row is matched on **Employee ID**: an existing
+  ID is updated, a new one is added. The file is checked first (column names, dates as
+  `2026-09-23`, whole numbers for Overdue Tasks) and nothing is written until you confirm.
+  Import needs a live Airtable connection with a token that has the `data.records:write` scope.
+  Sample files are in `samples/`.
 
 **Where the data comes from**
 
-| Situation                                         | Data                  |
-| ------------------------------------------------- | --------------------- |
-| Token pasted in the dashboard, or in `.env.local` | Live from Airtable    |
-| No token                                          | The saved copy        |
-| Saved copy deleted                                | Generated sample data |
+| Situation                                         | Data                    |
+| ------------------------------------------------- | ----------------------- |
+| Token pasted in the dashboard, or in `.env.local` | Live from Airtable      |
+| No token                                          | The saved copy (hourly) |
+| Saved copy deleted                                | Generated sample data   |
 
 Onboarding tasks are generated from the standard templates so that each employee has the number
 of overdue tasks set in Airtable; ticking a task is saved in your browser only.

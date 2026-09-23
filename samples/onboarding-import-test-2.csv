@@ -1,0 +1,8 @@
+Employee ID,Full Name,Position,Department,Manager,Start Date,Stage,Overdue Tasks,Status
+e-27,Tamar Katz,HR Business Partner,Customer Support,Omar Haddad,2026-10-05,Before Start,0,On Track
+e-28,Oliver Brown,Backend Developer,Engineering,Maya Cohen,2026-09-23,First Day,0,On Track
+e-29,Mia Rosen,Product Marketing Manager,Marketing,Tom Becker,2026-09-17,First Week,4,Needs Attention
+e-30,Daniel Avraham,Account Manager,Sales,Priya Nair,2026-09-02,First Month,0,On Track
+e-31,Lina Haddad,Financial Planner,Finance,Elena Rossi,2026-07-20,End of Period,2,Needs Attention
+e-32,Eitan Mor,Product Owner,Product,Daniel Weiss,2026-04-15,Completed,0,Completed
+e-09,Aisha Rahman,Sales Development Rep,Sales,Priya Nair,2026-09-05,First Month,0,On Track

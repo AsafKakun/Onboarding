@@ -1,4 +1,10 @@
 import type { Employee, Manager, OnboardingTask } from '../domain/types';
+import type { EmployeeImportRow } from './employeeCsv';
+
+export interface ImportResult {
+  created: number;
+  updated: number;
+}
 
 /** Where the data shown on the dashboard comes from (shown in the footer). */
 export type DataSource =
@@ -18,6 +24,8 @@ export interface OnboardingRepository {
   setTaskCompleted(taskId: string, completed: boolean): Promise<OnboardingTask>;
   /** Where the data comes from; used by the footer. */
   readonly source?: DataSource;
+  /** Adds or updates employees at the source; only when the source can be written (live Airtable). */
+  importEmployees?(rows: readonly EmployeeImportRow[]): Promise<ImportResult>;
   /** Only implemented by the demo repository; clears local changes and regenerates sample data. */
   resetDemoData?(): Promise<void>;
 }
