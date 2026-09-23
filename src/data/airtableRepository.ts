@@ -122,3 +122,22 @@ export function createAirtableRepository(
     options.storage,
   );
 }
+
+/** A copy of the Airtable table saved by `npm run sync:airtable` (contains no token). */
+export interface AirtableSnapshot {
+  syncedAt: string;
+  records: AirtableRecord[];
+}
+
+/** Employees from a saved Airtable snapshot; used by the published site, which has no token. */
+export function createAirtableSnapshotRepository(
+  snapshot: AirtableSnapshot,
+  options: { today?: () => string; storage?: KeyValueStorage | null } = {},
+): LocalTaskRepository {
+  return new LocalTaskRepository(
+    (today) => sampleDataFromAirtable(snapshot.records, today),
+    AIRTABLE_STORAGE_KEY,
+    options.today,
+    options.storage,
+  );
+}

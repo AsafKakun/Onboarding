@@ -1,16 +1,35 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import { airtableConfigFromEnv, createAirtableRepository } from '../data/airtableRepository';
+import {
+  airtableConfigFromEnv,
+  createAirtableRepository,
+  createAirtableSnapshotRepository,
+  type AirtableSnapshot,
+} from '../data/airtableRepository';
 import { MockRepository } from '../data/mockRepository';
 import type { OnboardingRepository } from '../data/repository';
 
 /**
- * The one place that decides where data comes from: Airtable when it is configured
- * in `.env.local` (see README), otherwise the generated sample data.
+ * The one place that decides where data comes from (see README, "Connecting Airtable"):
+ * 1. live Airtable, when a token is set in `.env.local` (local development only);
+ * 2. the saved Airtable snapshot `src/data/airtableSnapshot.json` (the published site);
+ * 3. otherwise the generated sample data.
  */
 const airtableConfig = airtableConfigFromEnv(import.meta.env);
-const defaultRepository: OnboardingRepository = airtableConfig
-  ? createAirtableRepository(airtableConfig)
-  : new MockRepository();
+// A glob, so the app still builds if the snapshot file is deleted.
+const [airtableSnapshot] = Object.values(
+  import.meta.glob<AirtableSnapshot>('../data/airtableSnapshot.json', {
+    eager: true,
+    import: 'default',
+  }),
+);
+
+function createDefaultRepository(): OnboardingRepository {
+  if (airtableConfig) return createAirtableRepository(airtableConfig);
+  if (airtableSnapshot) return createAirtableSnapshotRepository(airtableSnapshot);
+  return new MockRepository();
+}
+
+const defaultRepository = createDefaultRepository();
 
 const RepositoryContext = createContext<OnboardingRepository>(defaultRepository);
 

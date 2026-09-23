@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint . --max-warnings 0",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "sync:airtable": "node --env-file=.env.local scripts/sync-airtable.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

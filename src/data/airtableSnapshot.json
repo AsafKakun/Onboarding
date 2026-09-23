@@ -1,0 +1,257 @@
+{
+  "syncedAt": "2026-09-23T17:40:00.000Z",
+  "records": [
+    {
+      "id": "rechbeXfzkGQQ1U4q",
+      "fields": {
+        "Employee ID": "e-01",
+        "Full Name": "Noa Friedman",
+        "Position": "Frontend Developer",
+        "Department": "Engineering",
+        "Manager": "Maya Cohen",
+        "Start Date": "2026-09-26",
+        "Stage": "Before Start",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "recNUHkxhJ07o3GLE",
+      "fields": {
+        "Employee ID": "e-02",
+        "Full Name": "Lucas Meyer",
+        "Position": "Account Executive",
+        "Department": "Sales",
+        "Manager": "Priya Nair",
+        "Start Date": "2026-09-30",
+        "Stage": "Before Start",
+        "Overdue Tasks": 1,
+        "Status": "Needs Attention"
+      }
+    },
+    {
+      "id": "recI82LwrSlaNoAK1",
+      "fields": {
+        "Employee ID": "e-03",
+        "Full Name": "Amira Khalil",
+        "Position": "Financial Analyst",
+        "Department": "Finance",
+        "Manager": "Elena Rossi",
+        "Start Date": "2026-10-07",
+        "Stage": "Before Start",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "recRI8ZlmAvTwuflk",
+      "fields": {
+        "Employee ID": "e-04",
+        "Full Name": "Ethan Brooks",
+        "Position": "Support Specialist",
+        "Department": "Customer Support",
+        "Manager": "Omar Haddad",
+        "Start Date": "2026-09-23",
+        "Stage": "First Day",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "rec6KUiDpYivu8JCO",
+      "fields": {
+        "Employee ID": "e-05",
+        "Full Name": "Sofia Alvarez",
+        "Position": "Product Designer",
+        "Department": "Product",
+        "Manager": "Daniel Weiss",
+        "Start Date": "2026-09-21",
+        "Stage": "First Week",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "rec2tKxHhyAMY63Vd",
+      "fields": {
+        "Employee ID": "e-06",
+        "Full Name": "Yuval Katz",
+        "Position": "Backend Developer",
+        "Department": "Engineering",
+        "Manager": "Maya Cohen",
+        "Start Date": "2026-09-18",
+        "Stage": "First Week",
+        "Overdue Tasks": 2,
+        "Status": "Needs Attention"
+      }
+    },
+    {
+      "id": "recD9svER3vWB96ix",
+      "fields": {
+        "Employee ID": "e-07",
+        "Full Name": "Hannah Schmidt",
+        "Position": "Content Specialist",
+        "Department": "Marketing",
+        "Manager": "Tom Becker",
+        "Start Date": "2026-09-16",
+        "Stage": "First Week",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "recUpfXf1OwfsGlJh",
+      "fields": {
+        "Employee ID": "e-08",
+        "Full Name": "Liam O'Connor",
+        "Position": "QA Engineer",
+        "Department": "Engineering",
+        "Manager": "Maya Cohen",
+        "Start Date": "2026-09-11",
+        "Stage": "First Month",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "rectG0TYumvXGVOBa",
+      "fields": {
+        "Employee ID": "e-09",
+        "Full Name": "Aisha Rahman",
+        "Position": "Sales Development Rep",
+        "Department": "Sales",
+        "Manager": "Priya Nair",
+        "Start Date": "2026-09-05",
+        "Stage": "First Month",
+        "Overdue Tasks": 5,
+        "Status": "Needs Attention"
+      }
+    },
+    {
+      "id": "rec5UorlOdwXXHVpT",
+      "fields": {
+        "Employee ID": "e-10",
+        "Full Name": "Tal Mizrahi",
+        "Position": "Growth Marketer",
+        "Department": "Marketing",
+        "Manager": "Tom Becker",
+        "Start Date": "2026-08-30",
+        "Stage": "First Month",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "recaavFc9IB6WxJGj",
+      "fields": {
+        "Employee ID": "e-11",
+        "Full Name": "Chen Wei",
+        "Position": "Payroll Accountant",
+        "Department": "Finance",
+        "Manager": "Elena Rossi",
+        "Start Date": "2026-08-25",
+        "Stage": "First Month",
+        "Overdue Tasks": 2,
+        "Status": "Needs Attention"
+      }
+    },
+    {
+      "id": "recfAzUCXOG4Ql6Dl",
+      "fields": {
+        "Employee ID": "e-12",
+        "Full Name": "Olivia Martin",
+        "Position": "Product Manager",
+        "Department": "Product",
+        "Manager": "Daniel Weiss",
+        "Start Date": "2026-08-19",
+        "Stage": "End of Period",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "recpfXwg4sP8Dri6C",
+      "fields": {
+        "Employee ID": "e-13",
+        "Full Name": "Rami Nasser",
+        "Position": "Support Team Lead",
+        "Department": "Customer Support",
+        "Manager": "Omar Haddad",
+        "Start Date": "2026-07-30",
+        "Stage": "End of Period",
+        "Overdue Tasks": 3,
+        "Status": "Needs Attention"
+      }
+    },
+    {
+      "id": "recKBfjSoRA4rkgY6",
+      "fields": {
+        "Employee ID": "e-14",
+        "Full Name": "Grace Kim",
+        "Position": "Account Executive",
+        "Department": "Sales",
+        "Manager": "Priya Nair",
+        "Start Date": "2026-07-05",
+        "Stage": "End of Period",
+        "Overdue Tasks": 0,
+        "Status": "On Track"
+      }
+    },
+    {
+      "id": "rec2zp7DCHkwrvihe",
+      "fields": {
+        "Employee ID": "e-15",
+        "Full Name": "Jonas Berg",
+        "Position": "Financial Analyst",
+        "Department": "Finance",
+        "Manager": "Elena Rossi",
+        "Start Date": "2026-06-20",
+        "Stage": "Completed",
+        "Overdue Tasks": 0,
+        "Status": "Completed"
+      }
+    },
+    {
+      "id": "rec78zr7hbuMcOMin",
+      "fields": {
+        "Employee ID": "e-16",
+        "Full Name": "Layla Hassan",
+        "Position": "Content Specialist",
+        "Department": "Marketing",
+        "Manager": "Tom Becker",
+        "Start Date": "2026-06-05",
+        "Stage": "Completed",
+        "Overdue Tasks": 0,
+        "Status": "Completed"
+      }
+    },
+    {
+      "id": "receWXDbc2QT3KZaI",
+      "fields": {
+        "Employee ID": "e-17",
+        "Full Name": "Michael Ortiz",
+        "Position": "Frontend Developer",
+        "Department": "Engineering",
+        "Manager": "Maya Cohen",
+        "Start Date": "2026-05-16",
+        "Stage": "Completed",
+        "Overdue Tasks": 0,
+        "Status": "Completed"
+      }
+    },
+    {
+      "id": "recRm94Y53czIlhC6",
+      "fields": {
+        "Employee ID": "e-18",
+        "Full Name": "Emma Dubois",
+        "Position": "Product Designer",
+        "Department": "Product",
+        "Manager": "Daniel Weiss",
+        "Start Date": "2026-04-26",
+        "Stage": "Completed",
+        "Overdue Tasks": 0,
+        "Status": "Completed"
+      }
+    }
+  ]
+}

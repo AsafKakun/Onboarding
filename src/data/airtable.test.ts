@@ -3,10 +3,12 @@ import { buildSummaries } from '../domain/summarize';
 import {
   airtableConfigFromEnv,
   createAirtableRepository,
+  createAirtableSnapshotRepository,
   fetchAirtableRecords,
   sampleDataFromAirtable,
   type AirtableRecord,
 } from './airtableRepository';
+import snapshot from './airtableSnapshot.json';
 
 const TODAY = '2026-09-23';
 const CONFIG = { token: 'test-token', baseId: 'appTEST', table: 'Onboarding Employees' };
@@ -125,5 +127,26 @@ describe('createAirtableRepository', () => {
   it('has no demo reset', () => {
     const repository = createAirtableRepository(CONFIG, { storage: null });
     expect('resetDemoData' in repository).toBe(false);
+  });
+});
+
+describe('saved Airtable snapshot', () => {
+  it('holds only table data, never a token', () => {
+    expect(JSON.stringify(snapshot)).not.toMatch(/pat[A-Za-z0-9]{14}\./);
+  });
+
+  it('loads every employee with a manager', async () => {
+    const repository = createAirtableSnapshotRepository(snapshot, {
+      today: () => TODAY,
+      storage: null,
+    });
+    const [employees, managers, tasks] = await Promise.all([
+      repository.getEmployees(),
+      repository.getManagers(),
+      repository.getTasks(),
+    ]);
+    expect(employees).toHaveLength(snapshot.records.length);
+    const summaries = buildSummaries(employees, managers, tasks, TODAY);
+    expect(summaries.every((s) => s.manager !== null)).toBe(true);
   });
 });
